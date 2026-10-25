@@ -444,8 +444,6 @@ window.addEventListener("beforeunload", () => {
   stopCamera();
   if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
 });
-resizeCanvas();
-setView("draw");
 
 
 // --- Mãos mágicas e filtros faciais (MediaPipe executado no navegador) ---
@@ -453,6 +451,8 @@ const magicVideo = document.getElementById("magicVideo");
 const magicOverlay = document.getElementById("magicOverlay");
 const magicCtx = magicOverlay.getContext("2d");
 let magicStream = null;
+resizeCanvas();
+setView("draw");
 let magicMode = null;
 let visionModule = null;
 let handLandmarker = null;
@@ -531,6 +531,8 @@ async function startMagic(mode) {
 function stopMagicTracking() {
   if (magicLoop) cancelAnimationFrame(magicLoop);
   magicLoop = 0;
+  resizeCanvas();
+  setView("draw");
   magicCtx.clearRect(0, 0, magicOverlay.width, magicOverlay.height);
   if (magicStream && !["hands","face"].includes(currentView)) {
     magicStream.getTracks().forEach(track => track.stop());
@@ -656,3 +658,6 @@ document.getElementById("clearHandTrail").addEventListener("click", () => {
 });
 document.getElementById("handEffect").addEventListener("change", () => { handTrails=[]; });
 document.getElementById("faceEffect").addEventListener("change", () => {});
+
+resizeCanvas();
+setView("draw");
