@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11121a">
+  <title>Faísca — Laboratório Criativo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Faísca início"><span class="brand-icon">✳</span> faísca <span class="brand-small">LABORATÓRIO CRIATIVO</span></a>
+    <span class="local-status"><i></i> suas criações ficam neste dispositivo</span>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <p class="kicker">UM LUGAR PARA EXPERIMENTAR</p>
+      <h1>Não precisa saber o que vai criar.<br><em>Só começar.</em></h1>
+      <p class="hero-copy">Desenhe, edite fotos, use a câmera, crie partículas e experimente efeitos de mãos e rosto. Tudo no mesmo laboratório.</p>
+    </section>
+
+    <nav class="activity-tabs" aria-label="Escolher atividade">
+      <button class="tab active" data-view="draw">✎ Desenhar</button>
+      <button class="tab" data-view="photo">▧ Brincar com foto</button>
+      <button class="tab" data-view="camera">◉ Câmera</button>
+      <button class="tab" data-view="play">✳ Experimento</button>
+      <button class="tab" data-view="hands">✧ Mãos mágicas</button>
+      <button class="tab" data-view="face">☻ Efeitos no rosto</button>
+    </nav>
+
+    <section class="workbench">
+      <aside class="tools-panel">
+        <div class="panel-title">
+          <div><p class="kicker">CAIXA DE FERRAMENTAS</p><h2 id="toolTitle">Desenho livre</h2></div>
+          <span class="sparkle">✦</span>
+        </div>
+
+        <div id="drawTools" class="tool-group">
+          <label class="control-label" for="brushColor">Sua cor</label>
+          <div class="color-row">
+            <input type="color" id="brushColor" value="#a58bff" aria-label="Cor do pincel">
+            <div class="swatches">
+              <button class="swatch" data-color="#a58bff" style="--swatch:#a58bff" aria-label="Lilás"></button>
+              <button class="swatch" data-color="#ff7e9f" style="--swatch:#ff7e9f" aria-label="Rosa"></button>
+              <button class="swatch" data-color="#ffcf70" style="--swatch:#ffcf70" aria-label="Amarelo"></button>
+              <button class="swatch" data-color="#65dfc2" style="--swatch:#65dfc2" aria-label="Verde água"></button>
+              <button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="Branco"></button>
+            </div>
+          </div>
+          <div class="range-head"><label for="brushSize">Tamanho do traço</label><output id="brushSizeOut">8 px</output></div>
+          <input id="brushSize" type="range" min="1" max="48" value="8">
+          <label class="control-label space-top" for="brushStyle">Jeito do pincel</label>
+          <select id="brushStyle">
+            <option value="solid">Traço normal</option>
+            <option value="glow">Brilho mágico</option>
+            <option value="dots">Pontilhado</option>
+            <option value="rainbow">Arco-íris</option>
+          </select>
+          <div class="button-stack">
+            <button class="btn secondary" id="undoBtn">↶ Desfazer traço</button>
+            <button class="btn secondary" id="clearBtn">Limpar tela</button>
+          </div>
+        </div>
+
+        <div id="photoTools" class="tool-group hidden">
+          <label class="upload-tile" for="photoInput"><span class="upload-symbol">＋</span><strong>Escolher uma foto</strong><small>Do computador ou celular</small></label>
+          <input id="photoInput" type="file" accept="image/*" hidden>
+          <p class="tip">Depois de carregar, experimente os filtros. Você também pode desenhar por cima da imagem.</p>
+          <label class="control-label space-top" for="photoFilter">Transformar aparência</label>
+          <select id="photoFilter">
+            <option value="none">Original</option>
+            <option value="mono">Preto e branco</option>
+            <option value="warm">Memória quente</option>
+            <option value="cool">Sonho azul</option>
+            <option value="vivid">Cores intensas</option>
+            <option value="dream">Sonho suave</option>
+          </select>
+          <div class="range-head"><label for="photoBrightness">Brilho</label><output id="photoBrightnessOut">100%</output></div>
+          <input id="photoBrightness" type="range" min="50" max="150" value="100">
+          <div class="range-head space-top"><label for="photoContrast">Contraste</label><output id="photoContrastOut">100%</output></div>
+          <input id="photoContrast" type="range" min="50" max="150" value="100">
+          <div class="range-head space-top"><label for="photoSaturation">Saturação</label><output id="photoSaturationOut">100%</output></div>
+          <input id="photoSaturation" type="range" min="0" max="200" value="100">
+          <button class="btn secondary full space-top" id="resetPhotoAdjustments">↺ Restaurar ajustes</button>
+          <button class="btn secondary full space-top" id="removePhoto">Remover foto</button>
+        </div>
+
+        <div id="cameraTools" class="tool-group hidden">
+          <button class="btn primary full" id="startCamera">Ativar câmera</button>
+          <button class="btn secondary full" id="stopCamera" disabled>Desligar câmera</button>
+          <p class="tip">A câmera só liga quando você autorizar. Nada é enviado para um servidor.</p>
+          <button class="btn secondary full space-top" id="captureCamera" disabled>◎ Congelar momento</button>
+          <p class="tip">A captura vira uma imagem no quadro, pronta para receber filtros ou desenhos.</p>
+        </div>
+
+        <div id="playTools" class="tool-group hidden">
+          <p class="tip">Mova o mouse ou toque na área colorida. Cada movimento espalha pequenas faíscas.</p>
+          <label class="control-label" for="playMode">Experimento</label>
+          <select id="playMode">
+            <option value="stars">Chuva de estrelas</option>
+            <option value="bubbles">Bolhas coloridas</option>
+            <option value="orbit">Órbitas loucas</option>
+          </select>
+          <button class="btn primary full space-top" id="clearPlay">Recomeçar experimento</button>
+        </div>
+
+        <div id="handsTools" class="tool-group hidden">
+          <p class="tip">A câmera acompanha suas mãos e desenha rastros luminosos nos movimentos. A detecção acontece no navegador.</p>
+          <button class="btn primary full" id="startHands">Ativar mãos mágicas</button>
+          <button class="btn secondary full" id="stopHands" disabled>Desligar câmera</button>
+          <label class="control-label space-top" for="handEffect">Efeito de luz</label>
+          <select id="handEffect">
+            <option value="neon">Rastro neon</option>
+            <option value="stars">Faíscas estelares</option>
+            <option value="rainbow">Arco-íris</option>
+          </select>
+          <button class="btn secondary full space-top" id="clearHandTrail">Limpar rastros</button>
+          <p class="tip">Dica: deixe as mãos visíveis e com boa iluminação.</p>
+        </div>
+
+        <div id="faceTools" class="tool-group hidden">
+          <p class="tip">Experimente adesivos divertidos que acompanham pontos do rosto. O efeito é visual e não altera a foto original.</p>
+          <button class="btn primary full" id="startFace">Ativar efeitos no rosto</button>
+          <button class="btn secondary full" id="stopFace" disabled>Desligar câmera</button>
+          <label class="control-label space-top" for="faceEffect">Escolha um filtro</label>
+          <select id="faceEffect">
+            <option value="crown">Coroa brilhante</option>
+            <option value="glasses">Óculos neon</option>
+            <option value="sparkles">Constelação de estrelas</option>
+            <option value="alien">Antenas alienígenas</option>
+          </select>
+          <p class="tip">A câmera só inicia com sua permissão. A análise é feita no navegador.</p>
+        </div>
+
+        <div class="panel-bottom">
+          <span class="privacy-icon">◈</span>
+          <p><strong>Seu espaço, suas regras.</strong><br>Explore sem medo de errar. Você pode sempre começar de novo.</p>
+        </div>
+      </aside>
+
+      <section class="canvas-area">
+        <div class="canvas-heading">
+          <div><span class="live-dot"></span><span id="canvasModeLabel">QUADRO DE DESENHO</span></div>
+          <span id="canvasHint">Clique e arraste para desenhar</span>
+        </div>
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="artCanvas" aria-label="Área interativa para desenhar"></canvas>
+          <div id="cameraPreviewWrap" class="camera-preview hidden"><video id="cameraVideo" autoplay playsinline muted></video></div>
+          <div id="magicPreviewWrap" class="camera-preview hidden">
+            <video id="magicVideo" autoplay playsinline muted></video>
+            <canvas id="magicOverlay" aria-label="Sobreposição de efeitos da câmera"></canvas>
+          </div>
+          <div id="welcomeHint" class="welcome-hint"><span>✦</span><strong>Seu quadro está esperando.</strong><small>Faça um rabisco, teste uma cor ou escolha outra atividade.</small></div>
+        </div>
+        <div class="canvas-footer">
+          <span id="canvasStatus">0 traços · sem pressa</span>
+          <div class="footer-actions">
+            <button class="btn secondary" id="newCanvas">Novo quadro</button>
+            <button class="btn primary" id="saveBtn">↓ Salvar criação</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="inspiration">
+      <div><p class="kicker">SEM IDEIAS? TENTE UMA</p><h2>Uma faísca para começar</h2></div>
+      <div class="prompt-cards">
+        <button class="prompt-card" data-prompt="galaxy"><span>✧</span><strong>Uma galáxia inventada</strong><small>Use pontos e brilhos</small></button>
+        <button class="prompt-card" data-prompt="mood"><span>◒</span><strong>Desenhe um sentimento</strong><small>Só formas e cores</small></button>
+        <button class="prompt-card" data-prompt="chaos"><span>〰</span><strong>Bagunça bonita</strong><small>Faça 10 linhas sem pensar</small></button>
+      </div>
+    </section>
+    <footer>FAÍSCA + CAMLAB · um único laboratório para desenhar, editar imagens e experimentar efeitos</footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
